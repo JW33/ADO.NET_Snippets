@@ -1,0 +1,23 @@
+public void UpdateHero(int id, Hero hero)
+{
+    try
+    {
+        using (SqlConnection connection = new SqlConnection(ConnectionString))
+        {
+            connection.Open();
+            using (SqlCommand command = new SqlCommand("UpdateHero", connection))
+            {
+                command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.AddWithValue("@Id", id);
+                command.Parameters.AddWithValue("@Name", hero.Name);
+                command.Parameters.AddWithValue("@Universe", hero.Universe);
+
+                command.ExecuteNonQuery();
+            }
+        }
+    }
+    catch(Exception ex)
+    {
+        throw ex;
+    }
+}

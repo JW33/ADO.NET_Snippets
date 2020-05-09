@@ -1,0 +1,35 @@
+public Hero GetHeroByName(string name)
+{
+    Hero hero = null;
+    string nameWithoutUnderscore = name.Replace('_', ' ');
+    try
+    {
+        using (SqlConnection connection = new SqlConnection(ConnectionString))
+        {
+            connection.Open();
+            using (SqlCommand command = new SqlCommand("GetHeroByName", connection))
+            {
+                command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.AddWithValue("@Name", nameWithoutUnderscore);
+
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        hero = new Hero()
+                        {
+                            Id = Convert.ToInt32(reader["Id"]),
+                            Name = reader["Name"].ToString(),
+                            Universe = reader["Universe"].ToString()
+                        };
+                    }
+                }
+            }
+        }
+        return hero;
+    }
+    catch(Exception ex)
+    {
+        throw ex;
+    }
+}
